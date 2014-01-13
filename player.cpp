@@ -23,12 +23,15 @@
 
 #define fileNameSize 50
 unsigned char playStop = 1; // play or stop flag,1-play,0-stop
+int sameFileCheck = 0;
 bool type_wav = true;
 
 int dirN = 0;
 int fileN = 0;
 File currentFile;
-
+/**
+ * Restart play list
+ */
 void rewind(){
 	fileN = 0;
 }
@@ -40,6 +43,13 @@ void nextFile(){
 	fileN++;
 }
 
+/**
+ * Initialize current playing:
+ * 1. create file name
+ * 2. check file exists
+ * 3. if not try the other extension
+ * 4. if already tried the other extension restart play list
+ */
 void initP(){
 	playStop = 1;
 
@@ -60,26 +70,33 @@ void initP(){
 	fnS.toCharArray(fileName, fileNameSize);
 
 	currentFile = SD.open(fileName);
-	if(!currentFile){
+	if(!currentFile){//file does not exists
+		sameFileCheck++;
 
-		playStop = 0;
-		type_wav = !type_wav;
-		//try mp3
-		if(!type_wav){
-			rewind();
+		playStop = 0;//stop playing and do not skip to next file
+		type_wav = !type_wav; //try other extension
+		if(sameFileCheck >= 2){
+			rewind(); //all extensions checked: restart play list
 		}
 
 		return;
+	}else{
+		sameFileCheck = 0;
 	}
 
 }
 
+/**
+ * Close current file and point to the next one.
+ */
 void closeP(){
 	if(currentFile != NULL && currentFile) currentFile.close();
 	if(playStop == 1) nextFile();
 }
 
-
+/**
+ * Copy content of the file to the buffer.
+ */
 int readFile(byte *buffer, int len) {
 	int readLen = 0;
 	readLen = currentFile.read((char*)buffer,len);
@@ -179,15 +196,15 @@ int playFile() {
 			if (!MP3_DREQ) {
 				while (!MP3_DREQ) {
 					Mp3DeselectData();
-					while (1) {
-						AvailableProcessorTime(); //here vs1053 is busy, so you can do some interactive things, like key scanning,led controlling.
-						if (0 == playStop){
-							closeP();
-							return 0;
-						}else{
-							break;
-						}
+
+					AvailableProcessorTime(); //here vs1053 is busy, so you can do some interactive things, like key scanning,led controlling.
+					if (0 == playStop){
+						closeP();
+						return 0;
+					}else{
+						break;
 					}
+
 					Mp3SelectData();
 				}
 			}
