@@ -71,9 +71,14 @@ void initP(){
 
 	currentFile = SD.open(fileName);
 	if(!currentFile){
+
 		playStop = 0;
 		type_wav = !type_wav;
-		rewind();
+		//try mp3
+		if(!type_wav){
+			rewind();
+		}
+
 		return;
 	}
 
@@ -126,7 +131,7 @@ void scanKey() {
 }
 
 void pressed(char presseChar) {
-	if(presseChar == '9') return; //bug
+	if(presseChar == '9') return; //there is currently a problem on hardware, so skip button 9
 
 	int dirPressed;
 	if(presseChar == '*'){

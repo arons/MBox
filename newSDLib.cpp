@@ -1,12 +1,8 @@
 //  File newSDLib.cpp
-//  Functions for using FAT16 lib
-//  For more details about the product please check http://www.seeedstudio.com/depot/
 
-//  Copyright (c) 2010 seeed technology inc.
-//  Author: Icing Chang
+//  Copyright (c) 2013
+//  Author: Renzo Dani
 //  Version: 1.0
-//  Time: Oct 21, 2010
-//  Changing records:
 //    
 //  This library is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU Lesser General Public
