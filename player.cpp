@@ -186,7 +186,7 @@ int playFile() {
 	byte readBuf[READ_BUF_LEN];
 	byte *tp = readBuf;
 	while (1) {
-		readLen = readFile(readBuf, READ_BUF_LEN); //read file content length of 512 every time
+		readLen = readFile(readBuf, READ_BUF_LEN); //read file content, 32 byte every time
 		tp = readBuf;
 		//Serial.println(readLen);
 
@@ -197,7 +197,7 @@ int playFile() {
 				while (!MP3_DREQ) {
 					Mp3DeselectData();
 
-					AvailableProcessorTime(); //here vs1053 is busy, so you can do some interactive things, like key scanning,led controlling.
+					AvailableProcessorTime(); //here vs1053 is busy
 					if (0 == playStop){
 						closeP();
 						return 0;
