@@ -196,13 +196,14 @@ int playFile() {
 			if (!MP3_DREQ) {
 				while (!MP3_DREQ) {
 					Mp3DeselectData();
-
-					AvailableProcessorTime(); //here vs1053 is busy
-					if (0 == playStop){
-						closeP();
-						return 0;
-					}else{
-						break;
+					while (1) {
+						AvailableProcessorTime(); //here vs1053 is busy
+						if (0 == playStop){
+							closeP();
+							return 0;
+						}else{
+							break;
+						}
 					}
 
 					Mp3SelectData();
